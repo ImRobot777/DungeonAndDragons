@@ -1,4 +1,4 @@
-package fr.campus.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler;
 
 public class Main {
 
