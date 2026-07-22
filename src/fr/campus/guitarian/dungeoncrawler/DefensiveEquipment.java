@@ -1,23 +1,13 @@
 package fr.campus.guitarian.dungeoncrawler;
 
-public class DefensiveEquipment {
+public abstract class DefensiveEquipment {
 
-    private String type="SHIELD";
-    private String name="Legendary Shield";
-    private int defenseLevel = 1;
+    private String name;
+    private int defenseLevel;
 
-    public DefensiveEquipment(String type, String name, int defenseLevel) {
-        this.type = type;
+    protected DefensiveEquipment(String name, int defenseLevel) {
         this.name = name;
         this.defenseLevel = defenseLevel;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -39,8 +29,7 @@ public class DefensiveEquipment {
     @Override
     public String toString() {
         return "DefensiveEquipment{" +
-                "type='" + type + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", defenseLevel=" + defenseLevel +
                 '}';
     }
