@@ -36,22 +36,33 @@ public class Game {
             // On est sorti du while <==> le joueur a choisi "Continue"
             // On lance le dé et on change la position
             //int diceValue = Math.round( 6 * Math.random() + 1);
+            System.out.print("CURRENT POSITION = " + this.getCurrentPosition() + "/" + this.boardSize + "\n");
             Random random = new Random();
-            while (this.currentPosition < this.boardSize)
+            while (true)
             {
-                int diceValue = random.nextInt(6) + 1;
-                System.out.print("DICE RESULT = " + diceValue);
-                int newPosition = this.getCurrentPosition()+diceValue;
-                this.setCurrentPosition(newPosition);
-                System.out.print("CURRENT POSITION = " + newPosition + " / " + this.boardSize + "\n");
+                try{
+                    this.movePlayer(random);
+                }
+                catch (OutOfBoardException outExp){
+                    System.out.print(outExp.getMessage());
+                    break;
+                }
             }
-            System.out.print("VICTORY !");
-
         }
         else{
             System.out.print("GAME OVER !");
         }
+    }
 
+    public void movePlayer(Random random) throws OutOfBoardException{
+        int diceValue = random.nextInt(6) + 1;
+        System.out.print("DICE RESULT = " + diceValue + " AND ");
+        int newPosition = this.getCurrentPosition()+diceValue;
+        this.setCurrentPosition(newPosition);
+        if(newPosition >= this.boardSize){
+            throw new OutOfBoardException("VICTORY");
+        }
+        System.out.print("CURRENT POSITION = " + newPosition + "/" + this.boardSize + "\n");
     }
 
     public int createCharacter(){
