@@ -54,7 +54,7 @@ public class Menu {
 
 
     public int getCharacterSubMenu(){
-        return this.getCharacterChoiceInt("\n1. Afficher \n2. Modifier \n3. Continuer \n>");
+        return this.getCharacterChoiceInt("\n1. Display Info \n2. Edit Player \n3. Continue \n>");
     }
 
 
@@ -65,6 +65,7 @@ public class Menu {
     public void editCharacterName(Character c){
         String newName = getCharacterChoiceString("New Name \n>");
         c.setName(newName);
+        System.out.print("Your name is now " + newName + "\n");
     }
 
     public boolean isPlayerStartingTheGame(){
