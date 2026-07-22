@@ -17,7 +17,7 @@ public class Game {
 
     public void start()
     {
-        boolean isCharCreated = createCharacter() == 1;
+        boolean isCharCreated = this.createCharacter() == 1;
 
         if(isCharCreated){
             int playerChoice = 0;
@@ -56,31 +56,16 @@ public class Game {
 
     public int createCharacter(){
         int startChoice = menu.displayWelcomeMessage();
-
         if(startChoice == 1){
             String charName = menu.getCharacterChoiceString("Choose your character's name ? \n>");
             System.out.print("Welcome " + charName + " !\n");
             int charType = menu.getCharacterChoiceInt("Choose your character's type: \n1. Warrior \n2. Wizard \n>");
-            String charTypeName;
-            int healthPoint;
-            int attackPoint;
-            if(charType == 1){
-                charTypeName = "Warrior";
-                healthPoint  = 10;
-                attackPoint = 5;
-
+            if(charType == 1){ // Warrior
+                this.character = new Warrior(charName);
             }
-            else{ // Forcing value to Wizard ?
-                charTypeName = "Wizard";
-                healthPoint  = 7;
-                attackPoint = 7;
+            else{ // Wizard
+                this.character = new Wizard(charName);
             }
-
-            this.character = new Character(charTypeName, charName, healthPoint, attackPoint,
-                                            new OffensiveEquipment("init", "init", 0),
-                                            new DefensiveEquipment("init", "init", 0)
-            );
-
         }
         return startChoice;
     }

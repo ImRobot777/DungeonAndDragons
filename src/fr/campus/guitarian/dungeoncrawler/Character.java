@@ -1,29 +1,18 @@
 package fr.campus.guitarian.dungeoncrawler;
 
-public class Character {
-    private String type="Settler";
-    private String name="Jean Bono";
-    private int healthPoint = 2;
-    private int attackPoint = 1;
-    private OffensiveEquipment offensiveEquipment = new OffensiveEquipment("INIT", "INIT", 5);
-    private DefensiveEquipment defensiveEquipment = new DefensiveEquipment("INIT", "INIT", 5);
+public abstract class Character {
+    private String name;
+    private int healthPoint;
+    private int attackPoint;
+    private OffensiveEquipment offensiveEquipment;
+    private DefensiveEquipment defensiveEquipment;
 
-    public Character(String type, String name, int hp, int ap, OffensiveEquipment offensiveEquipment, DefensiveEquipment defensiveEquipment){
-        this.type = type;
+    protected Character(String name, int hp, int ap, OffensiveEquipment offensiveEquipment, DefensiveEquipment defensiveEquipment){
         this.name = name;
         this.healthPoint = hp;
         this.attackPoint = ap;
         this.offensiveEquipment = offensiveEquipment;
         this.defensiveEquipment = defensiveEquipment;
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -38,16 +27,16 @@ public class Character {
         return healthPoint;
     }
 
-    public void setHealthPoint(int hp) {
-        this.healthPoint = hp;
+    public void setHealthPoint(int healthPoint) {
+        this.healthPoint = healthPoint;
     }
 
     public int getAttackPoint() {
         return attackPoint;
     }
 
-    public void setStrength(int ap) {
-        this.attackPoint = ap;
+    public void setAttackPoint(int attackPoint) {
+        this.attackPoint = attackPoint;
     }
 
     public OffensiveEquipment getOffensiveEquipment() {
@@ -58,15 +47,22 @@ public class Character {
         this.offensiveEquipment = offensiveEquipment;
     }
 
+    public DefensiveEquipment getDefensiveEquipment() {
+        return defensiveEquipment;
+    }
+
+    public void setDefensiveEquipment(DefensiveEquipment defensiveEquipment) {
+        this.defensiveEquipment = defensiveEquipment;
+    }
 
     @Override
     public String toString() {
         return "Character{" +
-                "type='" + type + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", health=" + healthPoint +
                 ", strength=" + attackPoint +
                 ", offensiveEquipment=" + offensiveEquipment +
+                ", defensiveEquipment=" + defensiveEquipment +
                 '}';
     }
 }

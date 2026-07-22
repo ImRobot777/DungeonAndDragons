@@ -65,7 +65,7 @@ public class Menu {
     public void editCharacterName(Character c){
         String newName = getCharacterChoiceString("New Name \n>");
         c.setName(newName);
-        System.out.print("Your name is now " + newName + "\n");
+        System.out.print("Your name is now " + newName + " !\n");
     }
 
     public boolean isPlayerStartingTheGame(){
