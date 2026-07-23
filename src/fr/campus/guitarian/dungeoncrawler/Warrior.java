@@ -8,6 +8,7 @@ public class Warrior extends Character{
 
     }
 
+    /*
     @Override
     public String toString() {
         return "Warrior{" +
@@ -18,6 +19,6 @@ public class Warrior extends Character{
                 ", defensiveEquipment=" + getDefensiveEquipment() +
                 '}';
     }
-
+    */
 
 }

@@ -7,12 +7,13 @@ public class Spell extends OffensiveEquipment{
         super(name, attackLevel);
     }
 
+    /*
     @Override
     public String toString() {
         return "Spell{" +
                 "name='" + this.getName() + '\'' +
                 ", attackLevel=" + this.getAttackLevel() +
                 '}';
-    }
+    }*/
 
 }

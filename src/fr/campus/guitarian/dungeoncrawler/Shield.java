@@ -6,12 +6,12 @@ public class Shield extends DefensiveEquipment {
         super(name, defenseLevel);
     }
 
-
+    /*
     @Override
     public String toString() {
         return "Shield{" +
                 "name='" + this.getName() + '\'' +
                 ", defenseLevel=" + this.getDefenseLevel() +
                 '}';
-    }
+    }*/
 }

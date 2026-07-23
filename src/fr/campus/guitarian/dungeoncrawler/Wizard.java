@@ -8,6 +8,7 @@ public class Wizard extends Character{
 
     }
 
+    /*
     @Override
     public String toString() {
         return "Wizard{" +
@@ -17,5 +18,5 @@ public class Wizard extends Character{
                 ", offensiveEquipment=" + getOffensiveEquipment() +
                 ", defensiveEquipment=" + getDefensiveEquipment() +
                 '}';
-    }
+    }*/
 }

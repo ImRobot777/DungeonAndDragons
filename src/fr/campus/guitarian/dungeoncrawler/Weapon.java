@@ -7,7 +7,7 @@ public class Weapon extends OffensiveEquipment{
         super(name, attackLevel);
     }
 
-
+    /*
     @Override
     public String toString() {
         return "Weapon{" +
@@ -15,5 +15,6 @@ public class Weapon extends OffensiveEquipment{
                 ", attackLevel=" + this.getAttackLevel() +
                 '}';
     }
+     */
 
 }

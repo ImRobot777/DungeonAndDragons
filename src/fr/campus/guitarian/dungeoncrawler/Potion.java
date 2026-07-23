@@ -6,13 +6,13 @@ public class Potion extends DefensiveEquipment {
         super(name, defenseLevel);
     }
 
-
+    /*
     @Override
     public String toString() {
         return "Potion{" +
                 "name='" + this.getName() + '\'' +
                 ", defenseLevel=" + this.getDefenseLevel() +
                 '}';
-    }
+    }*/
 
 }

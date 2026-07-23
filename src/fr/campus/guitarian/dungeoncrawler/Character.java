@@ -57,7 +57,7 @@ public abstract class Character {
 
     @Override
     public String toString() {
-        return "Character{" +
+        return  this.getClass().getSimpleName() + "{" +
                 "name='" + name + '\'' +
                 ", health=" + healthPoint +
                 ", strength=" + attackPoint +
