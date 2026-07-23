@@ -8,4 +8,16 @@ public class Warrior extends Character{
 
     }
 
+    @Override
+    public String toString() {
+        return "Warrior{" +
+                "name='" + this.getName() + '\'' +
+                ", healthPoints=" + this.getHealthPoint() +
+                ", attackLevel=" + this.getAttackPoint() +
+                ", offensiveEquipment=" + getOffensiveEquipment() +
+                ", defensiveEquipment=" + getDefensiveEquipment() +
+                '}';
+    }
+
+
 }

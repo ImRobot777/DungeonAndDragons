@@ -8,4 +8,12 @@ public class Weapon extends OffensiveEquipment{
     }
 
 
+    @Override
+    public String toString() {
+        return "Weapon{" +
+                "name='" + this.getName() + '\'' +
+                ", attackLevel=" + this.getAttackLevel() +
+                '}';
+    }
+
 }

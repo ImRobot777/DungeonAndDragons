@@ -73,9 +73,13 @@ public class Game {
             int charType = menu.getCharacterChoiceInt("Choose your character's type: \n1. Warrior \n2. Wizard \n>");
             if(charType == 1){ // Warrior
                 this.character = new Warrior(charName);
+                //this.character.setOffensiveEquipment(new Weapon("LEGENDARY SWORD", 100));
+                //this.character.setDefensiveEquipment(new Shield("LEGENDARY ARMOR", 100));
             }
             else{ // Wizard
                 this.character = new Wizard(charName);
+                //this.character.setOffensiveEquipment(new Spell("FIRE ANNIHILATION", 100));
+                //this.character.setDefensiveEquipment(new Potion("LEGENDARY HEAL", 100));
             }
         }
         return startChoice;

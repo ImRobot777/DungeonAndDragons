@@ -7,4 +7,15 @@ public class Wizard extends Character{
         super(name, 7, 7, null, null);
 
     }
+
+    @Override
+    public String toString() {
+        return "Wizard{" +
+                "name='" + this.getName() + '\'' +
+                ", healthPoints=" + this.getHealthPoint() +
+                ", attackLevel=" + this.getAttackPoint() +
+                ", offensiveEquipment=" + getOffensiveEquipment() +
+                ", defensiveEquipment=" + getDefensiveEquipment() +
+                '}';
+    }
 }
