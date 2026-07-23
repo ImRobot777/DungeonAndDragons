@@ -5,7 +5,7 @@ import fr.campus.guitarian.dungeoncrawler.core.Game;
 public class Main {
 
     public static void main(String[] args) {
-        Game game = new Game(64, 1);
+        Game game = new Game();
         game.start();
 
 
