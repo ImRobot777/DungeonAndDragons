@@ -1,6 +1,8 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.items.offensive;
 
-public class Spell extends OffensiveEquipment{
+import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
+
+public class Spell extends OffensiveEquipment {
 
     public Spell(String name, int attackLevel)
     {

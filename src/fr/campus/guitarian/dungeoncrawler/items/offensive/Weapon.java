@@ -1,6 +1,8 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.items.offensive;
 
-public class Weapon extends OffensiveEquipment{
+import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
+
+public class Weapon extends OffensiveEquipment {
 
     public Weapon(String name, int attackLevel)
     {

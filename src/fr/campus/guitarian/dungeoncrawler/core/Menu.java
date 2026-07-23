@@ -1,4 +1,6 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.core;
+
+import fr.campus.guitarian.dungeoncrawler.characters.Character;
 
 import java.util.Scanner;
 
@@ -58,7 +60,7 @@ public class Menu {
     }
 
 
-    public void displayCharacterInfo(Character c){
+    public void displayCharacterInfo(fr.campus.guitarian.dungeoncrawler.characters.Character c){
         System.out.println(c);
     }
 

@@ -1,4 +1,6 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.items.defensive;
+
+import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
 
 public class Potion extends DefensiveEquipment {
 

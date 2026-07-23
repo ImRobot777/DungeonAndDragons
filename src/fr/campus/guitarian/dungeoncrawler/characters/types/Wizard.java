@@ -1,24 +1,24 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.characters.types;
 
-public class Warrior extends Character{
+import fr.campus.guitarian.dungeoncrawler.characters.Character;
 
-    public Warrior(String name)
+public class Wizard extends Character {
+
+    public Wizard(String name)
     {
-        super(name, 10, 5, null, null);
+        super(name, 7, 7, null, null);
 
     }
 
     /*
     @Override
     public String toString() {
-        return "Warrior{" +
+        return "Wizard{" +
                 "name='" + this.getName() + '\'' +
                 ", healthPoints=" + this.getHealthPoint() +
                 ", attackLevel=" + this.getAttackPoint() +
                 ", offensiveEquipment=" + getOffensiveEquipment() +
                 ", defensiveEquipment=" + getDefensiveEquipment() +
                 '}';
-    }
-    */
-
+    }*/
 }

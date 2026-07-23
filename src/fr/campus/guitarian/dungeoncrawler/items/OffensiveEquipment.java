@@ -1,4 +1,4 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.items;
 
 public abstract class OffensiveEquipment {
 

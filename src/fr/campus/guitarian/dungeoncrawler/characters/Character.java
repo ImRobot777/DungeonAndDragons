@@ -1,4 +1,7 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.characters;
+
+import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
+import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
 
 public abstract class Character {
     private String name;

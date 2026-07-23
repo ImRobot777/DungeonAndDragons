@@ -1,10 +1,19 @@
-package fr.campus.guitarian.dungeoncrawler;
+package fr.campus.guitarian.dungeoncrawler.core;
+
+import fr.campus.guitarian.dungeoncrawler.characters.Character;
+import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
+import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
+import fr.campus.guitarian.dungeoncrawler.exceptions.OutOfBoardException;
+import fr.campus.guitarian.dungeoncrawler.items.defensive.Potion;
+import fr.campus.guitarian.dungeoncrawler.items.defensive.Shield;
+import fr.campus.guitarian.dungeoncrawler.items.offensive.Spell;
+import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
 
 import java.util.Random;
 
 public class Game {
 
-    private Character character;
+    private fr.campus.guitarian.dungeoncrawler.characters.Character character;
     private Menu menu = Menu.getInstance();
 
     private int currentPosition;
@@ -59,8 +68,11 @@ public class Game {
         System.out.print("DICE RESULT = " + diceValue + " AND ");
         int newPosition = this.getCurrentPosition()+diceValue;
         this.setCurrentPosition(newPosition);
-        if(newPosition >= this.boardSize){
-            throw new OutOfBoardException("VICTORY");
+        if(newPosition == this.boardSize){
+            throw new OutOfBoardException("FLAWLESS VICTORY !!!");
+        }
+        else if(newPosition > this.boardSize){
+            throw new OutOfBoardException("VICTORY !!!");
         }
         System.out.print("CURRENT POSITION = " + newPosition + "/" + this.boardSize + "\n");
     }
@@ -85,7 +97,7 @@ public class Game {
         return startChoice;
     }
 
-    public Character getCharacter() {
+    public fr.campus.guitarian.dungeoncrawler.characters.Character getCharacter() {
         return character;
     }
 
