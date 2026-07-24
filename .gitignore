@@ -4,6 +4,9 @@ out/
 !**/src/test/**/out/
 .kotlin
 
+### DATA BASE ###
+db.properties
+
 ### Eclipse ###
 .apt_generated
 .classpath

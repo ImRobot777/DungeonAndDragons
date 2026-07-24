@@ -4,10 +4,13 @@ import fr.campus.guitarian.dungeoncrawler.board.Cell;
 import fr.campus.guitarian.dungeoncrawler.characters.Character;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
+import fr.campus.guitarian.dungeoncrawler.db.CharacterDAO;
 import fr.campus.guitarian.dungeoncrawler.exceptions.OutOfBoardException;
 import fr.campus.guitarian.dungeoncrawler.items.defensive.Shield;
 import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +23,17 @@ public class Game {
     private int playerPosition;
     private List<Cell> board;
 
-    public Game() {
+    private CharacterDAO characterDAO = new CharacterDAO() ;
+
+    public Game() throws SQLException, IOException {
+
+        try{
+            this.characterDAO.testConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
         this.playerPosition = 1;
         this.initializeBoard();
     }
