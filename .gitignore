@@ -4,9 +4,7 @@ out/
 !**/src/test/**/out/
 .kotlin
 .idea/
-.iml
-.ipr
-/.idea/
+*.iml
 
 
 ### DATA BASE ###
