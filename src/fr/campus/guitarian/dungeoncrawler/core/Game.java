@@ -5,11 +5,13 @@ import fr.campus.guitarian.dungeoncrawler.characters.Character;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
 import fr.campus.guitarian.dungeoncrawler.db.CharacterDAO;
+import fr.campus.guitarian.dungeoncrawler.db.CharacterRow;
 import fr.campus.guitarian.dungeoncrawler.exceptions.OutOfBoardException;
 import fr.campus.guitarian.dungeoncrawler.items.defensive.Shield;
 import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
 
 import java.io.IOException;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Random;
 public class Game {
 
     private Character character;
-    private Menu menu = Menu.getInstance();
+    private final Menu menu = Menu.getInstance();
 
     private int playerPosition;
     private List<Cell> board;
@@ -27,12 +29,18 @@ public class Game {
 
     public Game() throws SQLException, IOException {
 
+        /*
         try{
+
             this.characterDAO.testConnection();
+
+            List<Character> heroes = this.characterDAO.getHeroes();
+            System.out.println(heroes.get(0));
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        */
 
         this.playerPosition = 1;
         this.initializeBoard();
@@ -145,6 +153,79 @@ public class Game {
             }
         }
         return startChoice;
+    }
+
+    public List<Character> getHeroesFromDB() throws SQLException{
+        List<Character> heroes = new ArrayList<>();
+        List<CharacterRow> rows = this.characterDAO.getCharactersDAO();
+        for (CharacterRow row : rows) {
+            Character character;
+            if (row.getType().equals("warrior")){
+                character = new Warrior(row.getName());
+            } else if (row.getType().equals("wizard")) {
+                character = new Wizard(row.getName());
+            }
+            else{
+                throw new SQLDataException("Data Base Characters Type ERROR");
+            }
+            character.setId(row.getId());
+            character.setHealthPoint(row.getLifePoints());
+            character.setAttackPoint(row.getAttackPoints());
+
+            //For the moment Defensive and Offensive Equipment are not handled
+            //character.setDefensiveEquipment();
+            //character.setOffensiveEquipment();
+            heroes.add(character);
+        }
+        return heroes;
+    }
+
+    public void createHeroInDB(Character c) throws SQLException{
+        CharacterRow cr;
+        if(c instanceof Warrior){
+            cr = new CharacterRow(0, "Warrior",
+                c.getName(), c.getHealthPoint(), c.getAttackPoint(),
+                c.getOffensiveEquipment() != null ? c.getOffensiveEquipment().toString() : null,
+                c.getDefensiveEquipment() != null ? c.getDefensiveEquipment().toString() : null
+            );
+        }
+        else if(c instanceof Wizard){
+            cr = new CharacterRow(0, "Wizard",
+                c.getName(), c.getHealthPoint(), c.getAttackPoint(),
+                c.getOffensiveEquipment() != null ? c.getOffensiveEquipment().toString() : null,
+                c.getDefensiveEquipment() != null ? c.getDefensiveEquipment().toString() : null
+            );
+        }
+        else{
+            throw new SQLDataException("Character's Type ERROR");
+        }
+        //Save in BDD and get Id (in BDD back)
+        c.setId(characterDAO.setCharactersDAO(cr));
+    }
+
+    public void editHeroInDB(Character c) throws SQLException{
+        CharacterRow cr;
+        if(c instanceof Warrior){
+            cr = new CharacterRow(c.getId(), "Warrior",
+                c.getName(), c.getHealthPoint(), c.getAttackPoint(),
+                c.getOffensiveEquipment() != null ? c.getOffensiveEquipment().toString() : null,
+                c.getDefensiveEquipment() != null ? c.getDefensiveEquipment().toString() : null
+            );
+        }
+        else if(c instanceof Wizard){
+            cr = new CharacterRow(c.getId(), "Wizard",
+                c.getName(), c.getHealthPoint(), c.getAttackPoint(),
+                c.getOffensiveEquipment() != null ? c.getOffensiveEquipment().toString() : null,
+                c.getDefensiveEquipment() != null ? c.getDefensiveEquipment().toString() : null
+            );
+        }else{
+            throw new SQLDataException("Character's Type ERROR");
+        }
+        characterDAO.editCharactersDAO(cr);
+    }
+
+    public void changeHeroLifePointInDB(Character c) throws SQLException{
+        characterDAO.editLifePointsDAO(c.getHealthPoint(), c.getId());
     }
 
     public Character getCharacter() {

@@ -10,12 +10,22 @@ public abstract class Character {
     private OffensiveEquipment offensiveEquipment;
     private DefensiveEquipment defensiveEquipment;
 
+    private int id; //Only for heroes from the DataBase
+
     protected Character(String name, int hp, int ap, OffensiveEquipment offensiveEquipment, DefensiveEquipment defensiveEquipment){
         this.name = name;
         this.healthPoint = hp;
         this.attackPoint = ap;
         this.offensiveEquipment = offensiveEquipment;
         this.defensiveEquipment = defensiveEquipment;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public void setId(int bdd_id){
+        this.id = bdd_id;
     }
 
     public String getName() {
