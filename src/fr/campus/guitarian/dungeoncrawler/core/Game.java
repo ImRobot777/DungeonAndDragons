@@ -40,54 +40,54 @@ public class Game {
     private void initializeBoard(){
         this.board = new ArrayList<Cell>();
 
-        //Add First cell empty
-        this.board.add(new Cell());
-
-        Cell cellSword = new Cell();
-        cellSword.setOffensiveEquipment(new Sword());
-        this.board.add(cellSword);
-
-        Cell cellMace = new Cell();
-        cellMace.setOffensiveEquipment(new Mace());
-        this.board.add(cellMace);
-
-        Cell goblinCell = new Cell();
-        goblinCell.setCharacter(new Goblin("GobGob"));
-        this.board.add(goblinCell);
-
-        Cell cellPotion= new Cell();
-        cellPotion.setDefensiveEquipment(new GrandPotion());
-        this.board.add(cellPotion);
-
-        Cell cellPotionLow= new Cell();
-        cellPotionLow.setDefensiveEquipment(new StandardPotion());
-        this.board.add(cellPotionLow);
-
-        Cell cellFireBall = new Cell();
-        cellFireBall.setOffensiveEquipment(new Fireball());
-        this.board.add(cellFireBall);
-
-        Cell sorcererCell = new Cell();
-        sorcererCell.setCharacter(new Sorcerer("Arifureta"));
-        this.board.add(sorcererCell);
-
-        Cell cellSpell = new Cell();
-        cellSpell.setOffensiveEquipment(new Lightning());
-        this.board.add(cellSpell);
-
-        Cell dragonCell = new Cell();
-        dragonCell.setCharacter(new Dragon("Smaug"));
-        this.board.add(dragonCell);
-
-        // TEMP
-        /*
-        int i = 0;
-        for (Cell cell : this.board) {
-            i+=1;
-            System.out.println(i + "/ " + cell.toString());
+        //Add First 64 empty cells
+        for (int i = 0; i < 64; i++) {
+            this.board.add(new Cell());
         }
-        */
 
+        int[] dragonPositions = {45, 52, 56, 62};
+        for (int pos : dragonPositions) {
+            this.board.get(pos - 1).setCharacter(new Dragon("Dragon " + pos));
+        }
+
+        int[] sorcererPositions = {10,20,25,32,35,36,37,40,44,47};
+        for (int pos : sorcererPositions) {
+            this.board.get(pos - 1).setCharacter(new Sorcerer("Sorcerer " + pos));
+        }
+
+        int[] goblinPositions = {3,6,9,12,15,18,21,24,27,30};
+        for (int pos : goblinPositions) {
+            this.board.get(pos - 1).setCharacter(new Goblin("Goblin " + pos));
+        }
+
+        int[] macePositions = {2,11,5,22,38};
+        for (int pos : macePositions) {
+            this.board.get(pos - 1).setOffensiveEquipment(new Mace());
+        }
+
+        int[] swordPositions = {19,26,42,53};
+        for (int pos : swordPositions) {
+            this.board.get(pos - 1).setOffensiveEquipment(new Sword("Sword " + pos));
+        }
+
+        int[] lightningPositions = {1,4,8,17,23};
+        for (int pos : lightningPositions) {
+            this.board.get(pos - 1).setOffensiveEquipment(new Lightning());
+        }
+
+        //int[] fireballPositions = {48,49};
+        this.board.get(47).setOffensiveEquipment(new Fireball("Kamehameha !!!"));
+        this.board.get(48).setOffensiveEquipment(new Fireball("Explosion !!!"));
+
+        int[] standardPotionPositions = {7,13,31,33,39,43};
+        for (int pos : standardPotionPositions) {
+            this.board.get(pos - 1).setDefensiveEquipment(new StandardPotion());
+        }
+
+        int[] grandPotionPositions = {28,41};
+        for (int pos : grandPotionPositions) {
+            this.board.get(pos - 1).setDefensiveEquipment(new GrandPotion());
+        }
     }
 
     public void start()
@@ -145,7 +145,8 @@ public class Game {
             throw new OutOfBoardException("VICTORY !!!");
         }
         System.out.print("CURRENT POSITION = " + newPosition + "/" + this.getBoardSize() + "\n");
-        System.out.print(this.board.get(newPosition-1) + "\n");
+        //System.out.print(this.board.get(newPosition-1) + "\n");
+        this.board.get(newPosition - 1).interact(this.character);
     }
 
 

@@ -1,7 +1,7 @@
 package fr.campus.guitarian.dungeoncrawler.items.offensive;
 
 public class Sword extends Weapon {
-    public Sword(){
-        super("Sword", 5);
+    public Sword(String name){
+        super(name, 5);
     }
 }
