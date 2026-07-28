@@ -1,7 +1,7 @@
 package fr.campus.guitarian.dungeoncrawler.items.defensive;
 
 public class GrandPotion extends Potion{
-    public GrandPotion(){
-        super("GrandPotion", 5);
+    public GrandPotion(String name){
+        super(name, 5);
     }
 }

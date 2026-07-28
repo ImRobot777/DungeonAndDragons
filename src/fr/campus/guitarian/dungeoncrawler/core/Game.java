@@ -18,9 +18,7 @@ import fr.campus.guitarian.dungeoncrawler.items.offensive.*;
 import java.io.IOException;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
 
@@ -45,48 +43,60 @@ public class Game {
             this.board.add(new Cell());
         }
 
-        int[] dragonPositions = {45, 52, 56, 62};
-        for (int pos : dragonPositions) {
-            this.board.get(pos - 1).setCharacter(new Dragon("Dragon " + pos));
+        List<Integer> randomPositions = new ArrayList<>();
+        for(int i = 0; i < 64; i++){
+            randomPositions.add(i);
         }
+        Collections.shuffle(randomPositions);
 
-        int[] sorcererPositions = {10,20,25,32,35,36,37,40,44,47};
-        for (int pos : sorcererPositions) {
-            this.board.get(pos - 1).setCharacter(new Sorcerer("Sorcerer " + pos));
+        int index = 0; // Common counter
+        //Init each parts Quantity
+        int dragonsQty = 4;
+        int sorcerersQty = 10;
+        int goblinsQty = 10;
+        int macesQty = 5;
+        int swordsQty = 4;
+        int lightningsQty = 5;
+        int fireballsQty = 2;
+        int standardPotionsQty = 6;
+        int grandPotionsQty = 2;
+        //int emptyCellsQty = 16;
+
+        for (int i = 0; i < dragonsQty; i++) {
+            board.get(randomPositions.get(index)).setCharacter(new Dragon("Dragon_" + (i+1)));
+            index++;
         }
-
-        int[] goblinPositions = {3,6,9,12,15,18,21,24,27,30};
-        for (int pos : goblinPositions) {
-            this.board.get(pos - 1).setCharacter(new Goblin("Goblin " + pos));
+        for (int i = 0; i < sorcerersQty; i++) {
+            board.get(randomPositions.get(index)).setCharacter(new Sorcerer("Sorcerer_" + (i+1)));
+            index++;
         }
-
-        int[] macePositions = {2,11,5,22,38};
-        for (int pos : macePositions) {
-            this.board.get(pos - 1).setOffensiveEquipment(new Mace());
+        for (int i = 0; i < goblinsQty; i++) {
+            board.get(randomPositions.get(index)).setCharacter(new Goblin("Goblin_" + (i+1)));
+            index++;
         }
-
-        int[] swordPositions = {19,26,42,53};
-        for (int pos : swordPositions) {
-            this.board.get(pos - 1).setOffensiveEquipment(new Sword("Sword " + pos));
+        for (int i = 0; i < macesQty; i++) {
+            board.get(randomPositions.get(index)).setOffensiveEquipment(new Mace("Mace_" + (i+1)));
+            index++;
         }
-
-        int[] lightningPositions = {1,4,8,17,23};
-        for (int pos : lightningPositions) {
-            this.board.get(pos - 1).setOffensiveEquipment(new Lightning());
+        for (int i = 0; i < swordsQty; i++) {
+            board.get(randomPositions.get(index)).setOffensiveEquipment(new Sword("Sword_" + (i+1)));
+            index++;
         }
-
-        //int[] fireballPositions = {48,49};
-        this.board.get(47).setOffensiveEquipment(new Fireball("Kamehameha !!!"));
-        this.board.get(48).setOffensiveEquipment(new Fireball("Explosion !!!"));
-
-        int[] standardPotionPositions = {7,13,31,33,39,43};
-        for (int pos : standardPotionPositions) {
-            this.board.get(pos - 1).setDefensiveEquipment(new StandardPotion());
+        for (int i = 0; i < lightningsQty; i++) {
+            board.get(randomPositions.get(index)).setOffensiveEquipment(new Lightning("Lightning_" + (i+1)));
+            index++;
         }
-
-        int[] grandPotionPositions = {28,41};
-        for (int pos : grandPotionPositions) {
-            this.board.get(pos - 1).setDefensiveEquipment(new GrandPotion());
+        for (int i = 0; i < fireballsQty; i++) {
+            board.get(randomPositions.get(index)).setOffensiveEquipment(new Fireball("Fireball_" + (i+1)));
+            index++;
+        }
+        for (int i = 0; i < standardPotionsQty; i++) {
+            board.get(randomPositions.get(index)).setDefensiveEquipment(new StandardPotion("StandardPotion_" + (i+1)));
+            index++;
+        }
+        for (int i = 0; i < grandPotionsQty; i++) {
+            board.get(randomPositions.get(index)).setDefensiveEquipment(new GrandPotion("GrandPotion_" + (i+1)));
+            index++;
         }
     }
 
