@@ -28,9 +28,9 @@ public abstract class OffensiveEquipment {
 
     @Override
     public String toString() {
-        return  this.getClass().getSimpleName() + "{" +
-                "name='" + name + '\'' +
-                ", attackLevel=" + attackLevel +
+        return  this.getClass().getSimpleName() + " ==> {" +
+                "'" + name + "' : " +
+                "DEF = " + attackLevel +
                 '}';
     }
 }

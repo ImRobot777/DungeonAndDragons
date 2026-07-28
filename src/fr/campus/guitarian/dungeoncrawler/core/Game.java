@@ -2,13 +2,18 @@ package fr.campus.guitarian.dungeoncrawler.core;
 
 import fr.campus.guitarian.dungeoncrawler.board.Cell;
 import fr.campus.guitarian.dungeoncrawler.characters.Character;
+import fr.campus.guitarian.dungeoncrawler.characters.enemies.Dragon;
+import fr.campus.guitarian.dungeoncrawler.characters.enemies.Goblin;
+import fr.campus.guitarian.dungeoncrawler.characters.enemies.Sorcerer;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
 import fr.campus.guitarian.dungeoncrawler.db.CharacterDAO;
 import fr.campus.guitarian.dungeoncrawler.db.CharacterRow;
 import fr.campus.guitarian.dungeoncrawler.exceptions.OutOfBoardException;
+import fr.campus.guitarian.dungeoncrawler.items.defensive.GrandPotion;
 import fr.campus.guitarian.dungeoncrawler.items.defensive.Shield;
-import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
+import fr.campus.guitarian.dungeoncrawler.items.defensive.StandardPotion;
+import fr.campus.guitarian.dungeoncrawler.items.offensive.*;
 
 import java.io.IOException;
 import java.sql.SQLDataException;
@@ -28,20 +33,6 @@ public class Game {
     private CharacterDAO characterDAO = new CharacterDAO() ;
 
     public Game() throws SQLException, IOException {
-
-        /*
-        try{
-
-            this.characterDAO.testConnection();
-
-            List<Character> heroes = this.characterDAO.getHeroes();
-            System.out.println(heroes.get(0));
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        */
-
         this.playerPosition = 1;
         this.initializeBoard();
     }
@@ -52,21 +43,50 @@ public class Game {
         //Add First cell empty
         this.board.add(new Cell());
 
-        //Create and add 2nd cell with offensive equipment
-        Cell cellOfEq = new Cell();
-        cellOfEq.setOffensiveEquipment(new Weapon("WEAP TEST", 10));
-        this.board.add(cellOfEq);
+        Cell cellSword = new Cell();
+        cellSword.setOffensiveEquipment(new Sword());
+        this.board.add(cellSword);
 
-        //Add 3rd cell empty
-        this.board.add(new Cell());
+        Cell cellMace = new Cell();
+        cellMace.setOffensiveEquipment(new Mace());
+        this.board.add(cellMace);
 
-        //Create and add 4th cell with defensive equipment
-        Cell cellDeEq = new Cell();
-        cellDeEq.setDefensiveEquipment(new Shield("SHIELD TEST", 10));
-        this.board.add(cellDeEq);
+        Cell goblinCell = new Cell();
+        goblinCell.setCharacter(new Goblin("GobGob"));
+        this.board.add(goblinCell);
 
-        //Add 5th cell empty
-        this.board.add(new Cell());
+        Cell cellPotion= new Cell();
+        cellPotion.setDefensiveEquipment(new GrandPotion());
+        this.board.add(cellPotion);
+
+        Cell cellPotionLow= new Cell();
+        cellPotionLow.setDefensiveEquipment(new StandardPotion());
+        this.board.add(cellPotionLow);
+
+        Cell cellFireBall = new Cell();
+        cellFireBall.setOffensiveEquipment(new Fireball());
+        this.board.add(cellFireBall);
+
+        Cell sorcererCell = new Cell();
+        sorcererCell.setCharacter(new Sorcerer("Arifureta"));
+        this.board.add(sorcererCell);
+
+        Cell cellSpell = new Cell();
+        cellSpell.setOffensiveEquipment(new Lightning());
+        this.board.add(cellSpell);
+
+        Cell dragonCell = new Cell();
+        dragonCell.setCharacter(new Dragon("Smaug"));
+        this.board.add(dragonCell);
+
+        // TEMP
+        /*
+        int i = 0;
+        for (Cell cell : this.board) {
+            i+=1;
+            System.out.println(i + "/ " + cell.toString());
+        }
+        */
 
     }
 

@@ -70,12 +70,16 @@ public abstract class Character {
 
     @Override
     public String toString() {
-        return  this.getClass().getSimpleName() + "{" +
-                "name='" + name + '\'' +
-                ", health=" + healthPoint +
-                ", strength=" + attackPoint +
-                ", offensiveEquipment=" + offensiveEquipment +
-                ", defensiveEquipment=" + defensiveEquipment +
-                '}';
+
+        String off = offensiveEquipment !=null ? "\n offensiveEquipment: " + offensiveEquipment : "";
+        String def = defensiveEquipment !=null ? "\n defensiveEquipment: " + defensiveEquipment : "";
+
+        return  this.getClass().getSimpleName() + " ==> {" +
+                "'" + name + "' : " +
+                "HP = " + healthPoint +
+                ", AP = " + attackPoint
+                + off
+                + def
+                + '}';
     }
 }

@@ -42,11 +42,14 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "Cell{" +
-                "character=" + character +
-                ", offensiveEquipment=" + offensiveEquipment +
-                ", defensiveEquipment=" + defensiveEquipment +
-                '}';
+        String car = character !=null ? "\n character: " + character : "";
+        String off = offensiveEquipment !=null ? "\n offensiveEquipment: " + offensiveEquipment : "";
+        String def = defensiveEquipment !=null ? "\n defensiveEquipment: " + defensiveEquipment : "";
+        return "Cell ==> ["
+                + car
+                + off
+                + def
+                + "\n] \n";
     }
 
 }
