@@ -3,6 +3,12 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+.idea/
+*.iml
+
+
+### DATA BASE ###
+db.properties
 
 ### Eclipse ###
 .apt_generated
@@ -28,3 +34,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+

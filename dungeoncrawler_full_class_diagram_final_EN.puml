@@ -1,0 +1,448 @@
+@startuml dungeoncrawler_full_class_diagram
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+package fr.campus.guitarian.dungeoncrawler {
+
+  class Main {
+    +{static} main(args : String[]) : void
+  }
+
+  ' ===================== CHARACTERS =====================
+  package characters {
+    abstract class Character {
+      -int id
+      -String name
+      -int healthPoint
+      -Integer maxHealthPoint
+      -int attackPoint
+      -OffensiveEquipment offensiveEquipment
+      -DefensiveEquipment defensiveEquipment
+      #Character(name : String, hp : int, ap : int, oe : OffensiveEquipment, de : DefensiveEquipment, maxHp : Integer)
+      +getId() : int
+      +setId(id : int) : void
+      +getName() : String
+      +setName(name : String) : void
+      +getHealthPoint() : int
+      +setHealthPoint(hp : int) : void
+      +getMaxHealthPoint() : Integer
+      +getAttackPoint() : int
+      +setAttackPoint(ap : int) : void
+      +getOffensiveEquipment() : OffensiveEquipment
+      +setOffensiveEquipment(oe : OffensiveEquipment) : void
+      +getDefensiveEquipment() : DefensiveEquipment
+      +setDefensiveEquipment(de : DefensiveEquipment) : void
+      +canEquip(equipment : OffensiveEquipment) : boolean
+      +toString() : String
+    }
+    note bottom of Character
+      canEquip() returns false by default.
+      An Enemy therefore never equips
+      anything without extra code.
+    end note
+
+    package types {
+      class Warrior {
+        +Warrior(name : String)
+        +canEquip(equipment : OffensiveEquipment) : boolean
+      }
+      note bottom of Warrior
+        super(name, 10, 5, null, null, 10)
+        canEquip -> equipment instanceof Weapon
+      end note
+
+      class Wizard {
+        +Wizard(name : String)
+        +canEquip(equipment : OffensiveEquipment) : boolean
+      }
+      note bottom of Wizard
+        super(name, 7, 7, null, null, 7)
+        canEquip -> equipment instanceof Spell
+      end note
+    }
+    Character <|-- Warrior
+    Character <|-- Wizard
+
+    package enemies {
+      abstract class Enemy {
+        #Enemy(name : String, hp : int, ap : int)
+      }
+      note bottom of Enemy : super(name, hp, ap, null, null, null)
+
+      class Dragon {
+        +Dragon(name : String)
+      }
+      note bottom of Dragon : super(name, 15, 8)
+
+      class Sorcerer {
+        +Sorcerer(name : String)
+      }
+      note bottom of Sorcerer : super(name, 8, 5)
+
+      class Goblin {
+        +Goblin(name : String)
+      }
+      note bottom of Goblin : super(name, 5, 3)
+
+      Enemy <|-- Dragon
+      Enemy <|-- Sorcerer
+      Enemy <|-- Goblin
+    }
+    Character <|-- Enemy
+  }
+
+  ' ===================== ITEMS =====================
+  package items {
+    abstract class OffensiveEquipment {
+      -String name
+      -int attackLevel
+      #OffensiveEquipment(name : String, attackLevel : int)
+      +getName() : String
+      +setName(name : String) : void
+      +getAttackLevel() : int
+      +setAttackLevel(attackLevel : int) : void
+      +toString() : String
+    }
+    abstract class DefensiveEquipment {
+      -String name
+      -int defenseLevel
+      #DefensiveEquipment(name : String, defenseLevel : int)
+      +getName() : String
+      +setName(name : String) : void
+      +getDefenseLevel() : int
+      +setDefenseLevel(defenseLevel : int) : void
+      +toString() : String
+    }
+
+    package offensive {
+      class Weapon {
+        +Weapon(name : String, attackLevel : int)
+      }
+      class Mace {
+        +Mace(name : String)
+      }
+      note bottom of Mace : super(name, 3)
+      class Sword {
+        +Sword(name : String)
+      }
+      note bottom of Sword : super(name, 5)
+      Weapon <|-- Mace
+      Weapon <|-- Sword
+
+      class Spell {
+        +Spell(name : String, attackLevel : int)
+      }
+      class Lightning {
+        +Lightning(name : String)
+      }
+      note bottom of Lightning : super(name, 2)
+      class Fireball {
+        +Fireball(name : String)
+      }
+      note bottom of Fireball : super(name, 7)
+      Spell <|-- Lightning
+      Spell <|-- Fireball
+    }
+
+    package defensive {
+      class Shield {
+        +Shield(name : String, defenseLevel : int)
+      }
+      class Potion {
+        +Potion(name : String, defenseLevel : int)
+      }
+      class StandardPotion {
+        +StandardPotion(name : String)
+      }
+      note bottom of StandardPotion : super(name, 2)
+      class GrandPotion {
+        +GrandPotion(name : String)
+      }
+      note bottom of GrandPotion : super(name, 5)
+      Potion <|-- StandardPotion
+      Potion <|-- GrandPotion
+    }
+
+    OffensiveEquipment <|-- Weapon
+    OffensiveEquipment <|-- Spell
+    DefensiveEquipment <|-- Shield
+    DefensiveEquipment <|-- Potion
+  }
+  Character "1" o-- "0..1" OffensiveEquipment : offensive equipment
+  Character "1" o-- "0..1" DefensiveEquipment : defensive equipment
+
+  ' ===================== EXCEPTIONS =====================
+  package exceptions {
+    class OutOfBoardException {
+      +OutOfBoardException(msg : String)
+    }
+  }
+  class "java.lang.Exception" as JavaException << java.lang >>
+  JavaException <|-- OutOfBoardException
+
+  ' ===================== DICE =====================
+  package dice {
+    interface Dice {
+      +roll() : int
+    }
+    class SixSidedDice {
+      -Random random
+      +SixSidedDice(random : Random)
+      +roll() : int
+    }
+    note bottom of SixSidedDice : random.nextInt(6) + 1
+    class TwentySidedDice {
+      -Random random
+      +TwentySidedDice(random : Random)
+      +roll() : int
+    }
+    note bottom of TwentySidedDice : random.nextInt(20) + 1
+    Dice <|.. SixSidedDice
+    Dice <|.. TwentySidedDice
+  }
+  class "java.util.Random" as JavaRandom << java.util >>
+  SixSidedDice "1" o-- "1" JavaRandom
+  TwentySidedDice "1" o-- "1" JavaRandom
+
+  ' ===================== COMBAT =====================
+  package combat {
+    class CombatOutcome {
+      -Boolean enemyDefeated
+      -Boolean playerDefeated
+      -Boolean playerFled
+      -int retreatDistance
+      +CombatOutcome(enemyDefeated : Boolean, playerDefeated : Boolean, playerFled : Boolean, retreatDistance : int)
+      +getEnemyDefeated() : Boolean
+      +setEnemyDefeated(v : Boolean) : void
+      +getPlayerDefeated() : Boolean
+      +setPlayerDefeated(v : Boolean) : void
+      +getPlayerFled() : Boolean
+      +setPlayerFled(v : Boolean) : void
+      +getRetreatDistance() : int
+      +setRetreatDistance(d : int) : void
+    }
+
+    class CombatManager {
+      -Dice sixSidedDice
+      -Dice twentySidedDice
+      -Menu menu
+      +CombatManager(sixSidedDice : Dice, twentySidedDice : Dice, menu : Menu)
+      +fight(player : Character, enemy : Enemy) : CombatOutcome
+      -applyCriticalRule(baseAttack : int) : int
+    }
+    note bottom of CombatManager
+      fight() loops as long as neither
+      combatant is dead; each round the
+      player chooses (via Menu) to attack
+      or flee.
+      Flee -> playerFled=true + a
+      sixSidedDice roll (1-6) sets
+      retreatDistance.
+      Every hit goes through
+      applyCriticalRule(): a
+      twentySidedDice roll (1 = 0 damage,
+      20 = +2 attack, otherwise unchanged).
+    end note
+
+    CombatManager "1" o-- "1" Dice : sixSidedDice
+    CombatManager "1" o-- "1" Dice : twentySidedDice
+    CombatManager "1" o-- "1" Menu
+    CombatManager ..> CombatOutcome : produces
+  }
+
+  ' ===================== BOARD =====================
+  package board {
+    class Cell {
+      -Character character
+      -OffensiveEquipment offensiveEquipment
+      -DefensiveEquipment defensiveEquipment
+      +Cell()
+      +getCharacter() : Character
+      +setCharacter(character : Character) : void
+      +getOffensiveEquipment() : OffensiveEquipment
+      +setOffensiveEquipment(oe : OffensiveEquipment) : void
+      +getDefensiveEquipment() : DefensiveEquipment
+      +setDefensiveEquipment(de : DefensiveEquipment) : void
+      +interact(player : Character, combatManager : CombatManager) : CombatOutcome
+      +toString() : String
+    }
+    note bottom of Cell
+      interact():
+      - character != null -> delegates to
+        combatManager.fight(player, (Enemy)character)
+      - offensiveEquipment != null -> if
+        player.canEquip(equipment) (polymorphism)
+        AND it is better than the player's
+        current one -> equipped, otherwise
+        ignored/refused
+      - defensiveEquipment != null -> heals,
+        capped at player.getMaxHealthPoint()
+        via Math.min()
+      - otherwise -> empty cell, nothing happens
+      Always returns a CombatOutcome
+      (neutral one if no combat happened).
+      Removing a defeated enemy and applying
+      a flee retreat are handled by Game,
+      not by Cell.
+    end note
+
+    Cell "1" o-- "0..1" Character : occupant (hero OR enemy)
+    Cell "1" o-- "0..1" OffensiveEquipment
+    Cell "1" o-- "0..1" DefensiveEquipment
+    Cell ..> CombatManager : delegates combat
+    Cell ..> CombatOutcome : returns
+  }
+
+  ' ===================== DB =====================
+  package db {
+    class CharacterRow {
+      -int id
+      -String type
+      -String name
+      -int lifePoints
+      -int attackPoints
+      -String offensiveEquipment
+      -String defensiveEquipment
+      +CharacterRow(id : int, type : String, name : String, lifePoints : int, attackPoints : int, oe : String, de : String)
+      +getId() : int
+      +setId(id : int) : void
+      +getType() : String
+      +setType(type : String) : void
+      +getName() : String
+      +setName(name : String) : void
+      +getLifePoints() : int
+      +setLifePoints(lifePoints : int) : void
+      +getAttackPoints() : int
+      +setAttackPoints(attackPoints : int) : void
+      +getOffensiveEquipment() : String
+      +setOffensiveEquipment(oe : String) : void
+      +getDefensiveEquipment() : String
+      +setDefensiveEquipment(de : String) : void
+    }
+    note bottom of CharacterRow
+      DTO: a plain data bag, no business
+      logic, knows nothing about Character,
+      Warrior, or Wizard.
+    end note
+
+    class CharacterDAO implements "java.lang.AutoCloseable" {
+      -Connection connection
+      +CharacterDAO() throws SQLException, IOException
+      +testConnection() : void
+      -getCharactersDAO() : List<CharacterRow>
+      -setCharactersDAO(row : CharacterRow) : int
+      -editCharactersDAO(row : CharacterRow) : void
+      -editLifePointsDAO(hp : int, id : int) : void
+      +getHeroesFromDB() : List<Character>
+      +createHeroInDB(c : Character) : void
+      +editHeroInDB(c : Character) : void
+      +changeHeroLifePointInDB(c : Character) : void
+      -toRow(c : Character, id : int) : CharacterRow
+      +close() : void
+    }
+    note bottom of CharacterDAO
+      Loads db.properties (URL, user,
+      password) via java.util.Properties.
+      *DAO methods (private): raw SQL
+      access, only ever deal with
+      CharacterRow.
+      Public methods: CharacterRow <->
+      Character mapping (via instanceof
+      Warrior/Wizard), moved here from
+      Game. setCharactersDAO returns the
+      Id generated by MySQL
+      (RETURN_GENERATED_KEYS).
+      implements AutoCloseable: usable in
+      a try-with-resources block in Main.
+    end note
+
+    CharacterDAO ..> CharacterRow : internal use
+    CharacterDAO ..> Character : public API (mapping)
+  }
+  class "java.sql.Connection" as JavaConnection << external JDBC >>
+  CharacterDAO "1" o-- "1" JavaConnection
+
+  ' ===================== CORE =====================
+  package core {
+    class Menu << singleton >> {
+      -Scanner scanner
+      -{static} Menu INSTANCE
+      -Menu()
+      +{static} getInstance() : Menu
+      +displayWelcomeMessage() : int
+      +getCharacterChoiceString(prompt : String) : String
+      +getCharacterChoiceInt(prompt : String) : int
+      +getCharacterSubMenu() : int
+      +displayCharacterInfo(c : Character) : void
+      +editCharacterName(c : Character) : void
+      +isPlayerStartingTheGame() : boolean
+    }
+
+    class Game {
+      -Character character
+      -Menu menu
+      -CharacterDAO characterDAO
+      -int playerPosition
+      -int boardSize
+      -List<Cell> board
+      -Dice sixSidedDice
+      -CombatManager combatManager
+      +Game(menu : Menu, playerPosition : int, boardSize : int, characterDAO : CharacterDAO, sixSidedDice : Dice, combatManager : CombatManager) throws SQLException, IOException, OutOfBoardException
+      -initializeBoard() : void throws OutOfBoardException
+      +start() : void
+      +createCharacter() : int
+      +playTurn() : void throws OutOfBoardException
+      +getCharacter() : Character
+      +setCharacter(character : Character) : void
+      +getPlayerPosition() : int
+      +setPlayerPosition(playerPosition : int) : void
+      +getBoardSize() : int
+      +toString() : String
+    }
+    note bottom of Game
+      initializeBoard(): boardSize empty
+      cells, then positions drawn from a
+      shuffled list of 0..boardSize-1
+      (Collections.shuffle): 4 Dragons,
+      10 Sorcerers, 10 Goblins, 5 Maces,
+      4 Swords, 5 Lightnings, 2 Fireballs,
+      6 StandardPotions, 2 GrandPotions,
+      the rest left empty.
+
+      playTurn(): sixSidedDice.roll(),
+      advances playerPosition, checks for
+      victory (OutOfBoardException),
+      otherwise calls cell.interact(character,
+      combatManager) then applies the
+      CombatOutcome: removes the enemy if
+      enemyDefeated, throws
+      OutOfBoardException if playerDefeated
+      (ends the game), moves playerPosition
+      back (Math.max(1, ...)) if playerFled.
+
+      getBoardSize() returns board.size()
+      (derived, never a stored attribute).
+    end note
+  }
+
+  Main ..> Menu : creates (getInstance)
+  Main ..> "java.util.Random" : creates
+  Main ..> SixSidedDice : creates
+  Main ..> TwentySidedDice : creates
+  Main ..> CombatManager : creates
+  Main "1" ..> "1" CharacterDAO : try-with-resources
+  Main --> Game : creates and launches (start())
+
+  Game "1" *-- "1" Menu
+  Game "1" o-- "0..1" Character : current player
+  Game "1" o-- "*" Cell : board
+  Game "1" o-- "1" CharacterDAO
+  Game "1" o-- "1" Dice : sixSidedDice
+  Game "1" o-- "1" CombatManager
+  Game ..> Warrior : instantiates (createCharacter)
+  Game ..> Wizard : instantiates (createCharacter)
+  Game ..> OutOfBoardException : throws (playTurn/initializeBoard)
+}
+
+@enduml
