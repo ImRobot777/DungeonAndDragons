@@ -9,15 +9,21 @@ public abstract class Character {
     private int attackPoint;
     private OffensiveEquipment offensiveEquipment;
     private DefensiveEquipment defensiveEquipment;
+    private Integer maxHealthPoint;
 
     private int id; //Only for heroes from the DataBase
 
-    protected Character(String name, int hp, int ap, OffensiveEquipment offensiveEquipment, DefensiveEquipment defensiveEquipment){
+    protected Character(String name, int hp, int ap, OffensiveEquipment offensiveEquipment, DefensiveEquipment defensiveEquipment, Integer maxHealthPoint){
         this.name = name;
         this.healthPoint = hp;
         this.attackPoint = ap;
         this.offensiveEquipment = offensiveEquipment;
         this.defensiveEquipment = defensiveEquipment;
+        this.maxHealthPoint = maxHealthPoint;
+    }
+
+    public Integer getMaxHealthPoint() {
+        return this.maxHealthPoint;
     }
 
     public int getId(){

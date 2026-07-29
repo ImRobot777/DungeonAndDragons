@@ -1,8 +1,11 @@
 package fr.campus.guitarian.dungeoncrawler.board;
 
 import fr.campus.guitarian.dungeoncrawler.characters.Character;
+import fr.campus.guitarian.dungeoncrawler.characters.enemies.Enemy;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
+import fr.campus.guitarian.dungeoncrawler.combat.CombatManager;
+import fr.campus.guitarian.dungeoncrawler.combat.CombatOutcome;
 import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
 import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
 import fr.campus.guitarian.dungeoncrawler.items.offensive.Spell;
@@ -45,42 +48,37 @@ public class Cell {
     }
 
 
-    public void interact(Character player){
+    public CombatOutcome interact(Character player, CombatManager combatManager){
+        CombatOutcome combatOutcome = new CombatOutcome(false, false, false, 0);
         if(this.character != null){
-            System.out.println("ENCOUNTER ! ==> '" + this.character.getClass().getSimpleName() + "'");
-            //TODO CODE THE FIGHT
-
-        } else if (this.offensiveEquipment!=null) {
+            System.out.println("ENCOUNTER ! ==> '" + this.character.getName() + "' " + "Your current HP = " + player.getHealthPoint());
+            combatOutcome = combatManager.fight(player, (Enemy) this.character);
+        }
+        else if (this.offensiveEquipment!=null) {
             String eqpDesc = "'" + this.offensiveEquipment.getName() + "' with AP= " + this.offensiveEquipment.getAttackLevel() + " ";
             Boolean playerIsWarriorAndEqpIsWeapon = player instanceof Warrior && this.offensiveEquipment instanceof Weapon;
             Boolean playerIsWizardAndEqpIsSpell = player instanceof Wizard && this.offensiveEquipment instanceof Spell;
             if(playerIsWarriorAndEqpIsWeapon ||  playerIsWizardAndEqpIsSpell){
                 Boolean isLootBetterThanPlayersOne =
-                         (player.getOffensiveEquipment() != null
-                            && player.getOffensiveEquipment().getAttackLevel() < this.offensiveEquipment.getAttackLevel())
-                         || player.getOffensiveEquipment() == null
+                        player.getOffensiveEquipment() == null || player.getOffensiveEquipment().getAttackLevel() < this.offensiveEquipment.getAttackLevel()
                 ;
                 if ( isLootBetterThanPlayersOne ){
                     player.setOffensiveEquipment(this.offensiveEquipment);
-                    System.out.println("You got: " + eqpDesc);
+                    System.out.println("You got: " + eqpDesc + " your AP are now: " + (player.getAttackPoint()+this.offensiveEquipment.getAttackLevel()));
                 }
-                else{
-                    System.out.println("Equipment ignored, no good enough: " +  eqpDesc);
-                }
+                else{System.out.println("Equipment ignored, no good enough: " +  eqpDesc);}
             }
-            else {
-                System.out.println("You cannot use: " + eqpDesc);
-            }
-        }else if(this.defensiveEquipment != null){
+            else {System.out.println("You cannot use: " + eqpDesc);}
+        }
+        else if(this.defensiveEquipment != null){
             String eqpDesc = "'" + this.defensiveEquipment.getName() + "' with HP= " + this.defensiveEquipment.getDefenseLevel() + " ";
             System.out.println("You got: " + eqpDesc);
-            int totalHP = player.getHealthPoint() +  this.defensiveEquipment.getDefenseLevel();
+            int totalHP = Math.min(player.getMaxHealthPoint(), player.getHealthPoint() +  this.defensiveEquipment.getDefenseLevel());
             player.setHealthPoint(totalHP);
             System.out.println("Your HP is now: " + totalHP);
         }
-        else {// Empty cell
-            System.out.println("Empty cell, nothing happened");
-        }
+        else {System.out.println("Empty cell, nothing happened");}
+        return combatOutcome;
     }
 
 

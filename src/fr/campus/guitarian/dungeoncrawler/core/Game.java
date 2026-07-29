@@ -7,8 +7,11 @@ import fr.campus.guitarian.dungeoncrawler.characters.enemies.Goblin;
 import fr.campus.guitarian.dungeoncrawler.characters.enemies.Sorcerer;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
 import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
+import fr.campus.guitarian.dungeoncrawler.combat.CombatManager;
+import fr.campus.guitarian.dungeoncrawler.combat.CombatOutcome;
 import fr.campus.guitarian.dungeoncrawler.db.CharacterDAO;
 import fr.campus.guitarian.dungeoncrawler.db.CharacterRow;
+import fr.campus.guitarian.dungeoncrawler.dice.Dice;
 import fr.campus.guitarian.dungeoncrawler.exceptions.OutOfBoardException;
 import fr.campus.guitarian.dungeoncrawler.items.defensive.GrandPotion;
 import fr.campus.guitarian.dungeoncrawler.items.defensive.Shield;
@@ -24,24 +27,30 @@ public class Game {
 
     private Character character;
     private final Menu menu;
-
+    private CharacterDAO characterDAO;
     private int playerPosition;
     private int boardSize;
     private List<Cell> board;
 
-    private CharacterDAO characterDAO;
-    public Game(Menu menu, int playerPosition, int boardSize, CharacterDAO characterDAO) throws SQLException, IOException {
+    private Dice sixSidedDice;
+    //private Dice twentySidedDice;
+    private CombatManager combatManager;
+
+    public Game(Menu menu, int playerPosition, int boardSize, CharacterDAO characterDAO, Dice sixSidedDice, CombatManager combatManager) throws SQLException, IOException, OutOfBoardException {
 
         this.menu = menu;
         this.playerPosition = playerPosition;
         this.boardSize = boardSize;
         this.characterDAO = characterDAO;
 
+        this.sixSidedDice = sixSidedDice;
+        //this.twentySidedDice = twentySidedDice;
+        this.combatManager = combatManager;
 
         this.initializeBoard();
     }
 
-    private void initializeBoard(){
+    private void initializeBoard() throws OutOfBoardException{
         this.board = new ArrayList<Cell>();
 
         //Add First 64 empty cells
@@ -128,11 +137,10 @@ public class Game {
             // On lance le dé et on change la position
             //int diceValue = Math.round( 6 * Math.random() + 1);
             System.out.print("CURRENT POSITION = " + this.getPlayerPosition() + "/" + this.getBoardSize() + "\n");
-            Random random = new Random();
             while (true)
             {
                 try{
-                    this.playTurn(random);
+                    this.playTurn();
                 }
                 catch (OutOfBoardException outExp){
                     System.out.print(outExp.getMessage());
@@ -146,13 +154,11 @@ public class Game {
     }
 
 
-    public void playTurn(Random random) throws OutOfBoardException{
-        int diceValue;
-        //diceValue= random.nextInt(6) + 1;
-        diceValue = 1; //cheat dice
+    public void playTurn() throws OutOfBoardException{
 
+        int diceValue = this.sixSidedDice.roll();
         System.out.print("DICE RESULT = " + diceValue + " ===> ");
-        int newPosition = this.getPlayerPosition()+diceValue;
+        int newPosition = this.getPlayerPosition() + diceValue;
         this.setPlayerPosition(newPosition);
         if(newPosition == this.getBoardSize()){
             throw new OutOfBoardException("FLAWLESS VICTORY !!!");
@@ -160,9 +166,30 @@ public class Game {
         else if(newPosition > this.getBoardSize()){
             throw new OutOfBoardException("VICTORY !!!");
         }
+
         System.out.print("CURRENT POSITION = " + newPosition + "/" + this.getBoardSize() + "\n");
-        //System.out.print(this.board.get(newPosition-1) + "\n");
-        this.board.get(newPosition - 1).interact(this.character);
+
+        Cell currentCell = this.board.get(newPosition-1);
+        CombatOutcome combatOutcome = currentCell.interact(this.character, this.combatManager);
+
+        if(combatOutcome.getEnemyDefeated()){
+            System.out.println("Enemy '" + currentCell.getCharacter().getName() + "' is DEFEATED ! " + "Your current HP = " + this.character.getHealthPoint());
+            currentCell.setCharacter(null);
+        }
+        else if(combatOutcome.getPlayerDefeated()){
+            System.out.println("YOU HAVE BEEN DEFEATED !!!");
+            throw new OutOfBoardException("GAME OVER"); //To stop the GAME
+        }
+        else if(combatOutcome.getPlayerFled()){
+            int retreatDistance = combatOutcome.getRetreatDistance();
+            System.out.println("You are moving back " + retreatDistance + " cell(s) ");
+            int retreatPosition = Math.max(1, this.getPlayerPosition() - retreatDistance); //Position 1 is the beginning
+            this.setPlayerPosition(retreatPosition);
+            System.out.print("RETREAT POSITION = " + this.getPlayerPosition() + "/" + this.getBoardSize() + "\n");
+            //No more interaction for escapers !!!
+
+        }
+
     }
 
 

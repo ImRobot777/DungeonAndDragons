@@ -6,7 +6,7 @@ import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
 public class Warrior extends Character {
 
     public Warrior(String name){
-        super(name, 10, 5, null, null);
+        super(name, 10, 5, null, null, 10);
     }
 
 

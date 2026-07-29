@@ -30,7 +30,7 @@ public abstract class OffensiveEquipment {
     public String toString() {
         return  this.getClass().getSimpleName() + " ==> {" +
                 "'" + name + "' : " +
-                "DEF = " + attackLevel +
+                "ATK = " + attackLevel +
                 '}';
     }
 }
