@@ -7,43 +7,86 @@ import fr.campus.guitarian.dungeoncrawler.combat.CombatOutcome;
 import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
 import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
 
+/**
+ * The type Cell.
+ */
 public class Cell {
 
     private Character character;
     private OffensiveEquipment offensiveEquipment;
     private DefensiveEquipment defensiveEquipment;
 
+    /**
+     * Instantiates a new Cell.
+     */
     public Cell(){
         this.character = null;
         this.offensiveEquipment = null;
         this.defensiveEquipment = null;
     }
 
+    /**
+     * Gets character.
+     *
+     * @return the character
+     */
     public Character getCharacter() {
         return character;
     }
 
+    /**
+     * Sets character.
+     *
+     * @param character the character
+     */
     public void setCharacter(Character character) {
         this.character = character;
     }
 
+    /**
+     * Gets offensive equipment.
+     *
+     * @return the offensive equipment
+     */
     public OffensiveEquipment getOffensiveEquipment() {
         return offensiveEquipment;
     }
 
+    /**
+     * Sets offensive equipment.
+     *
+     * @param offensiveEquipment the offensive equipment
+     */
     public void setOffensiveEquipment(OffensiveEquipment offensiveEquipment) {
         this.offensiveEquipment = offensiveEquipment;
     }
 
+    /**
+     * Gets defensive equipment.
+     *
+     * @return the defensive equipment
+     */
     public DefensiveEquipment getDefensiveEquipment() {
         return defensiveEquipment;
     }
 
+    /**
+     * Sets defensive equipment.
+     *
+     * @param defensiveEquipment the defensive equipment
+     */
     public void setDefensiveEquipment(DefensiveEquipment defensiveEquipment) {
         this.defensiveEquipment = defensiveEquipment;
     }
 
 
+    /**
+     * Interact combat outcome.
+     *
+     * @param player        the player
+     * @param combatManager the combat manager
+     * @return the combat outcome
+     */
     public CombatOutcome interact(Character player, CombatManager combatManager){
         CombatOutcome combatOutcome = new CombatOutcome(false, false, false, 0);
         if(this.character != null){

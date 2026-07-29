@@ -11,10 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * The type Character dao.
+ */
 public class CharacterDAO implements AutoCloseable {
 
     private Connection connection;
 
+    /**
+     * Instantiates a new Character dao.
+     *
+     * @throws SQLException the sql exception
+     * @throws IOException  the io exception
+     */
     public CharacterDAO() throws SQLException, IOException {
         Properties dbProperties = new Properties();
         try (FileInputStream fis = new FileInputStream("db.properties")) {
@@ -26,6 +35,9 @@ public class CharacterDAO implements AutoCloseable {
         this.connection = DriverManager.getConnection(url, user, password);
     }
 
+    /**
+     * Test connection.
+     */
     public void testConnection() {
         try {
             Statement stmt = this.connection.createStatement();
@@ -37,8 +49,6 @@ public class CharacterDAO implements AutoCloseable {
             System.out.println(e.getMessage());
         }
     }
-
-    // ---- Accès brut (implémentation interne, plus exposée à Game) ----
 
     private List<CharacterRow> getCharactersDAO() throws SQLException {
         List<CharacterRow> characters = new ArrayList<>();
@@ -98,9 +108,14 @@ public class CharacterDAO implements AutoCloseable {
         stmt.executeUpdate();
     }
 
-    // ---- API publique orientée domaine (utilisée par Game) ----
-    // Rapatriée depuis Game : le mapping CharacterRow <-> Character vit ici désormais.
+    // From Game.java : mapping CharacterRow <-> Character is now done here.
 
+    /**
+     * Gets heroes from db.
+     *
+     * @return the heroes from db
+     * @throws SQLException the sql exception
+     */
     public List<Character> getHeroesFromDB() throws SQLException {
         List<Character> heroes = new ArrayList<>();
         for (CharacterRow row : this.getCharactersDAO()) {
@@ -120,15 +135,33 @@ public class CharacterDAO implements AutoCloseable {
         return heroes;
     }
 
+    /**
+     * Create hero in db.
+     *
+     * @param c the c
+     * @throws SQLException the sql exception
+     */
     public void createHeroInDB(Character c) throws SQLException {
         CharacterRow row = toRow(c, 0);
         c.setId(this.setCharactersDAO(row));
     }
 
+    /**
+     * Edit hero in db.
+     *
+     * @param c the c
+     * @throws SQLException the sql exception
+     */
     public void editHeroInDB(Character c) throws SQLException {
         this.editCharactersDAO(toRow(c, c.getId()));
     }
 
+    /**
+     * Change hero life point in db.
+     *
+     * @param c the c
+     * @throws SQLException the sql exception
+     */
     public void changeHeroLifePointInDB(Character c) throws SQLException {
         this.editLifePointsDAO(c.getHealthPoint(), c.getId());
     }
@@ -153,8 +186,7 @@ public class CharacterDAO implements AutoCloseable {
         );
     }
 
-    // ---- Fermeture propre de la ressource ----
-
+    // ---- Call from Main.java ----
     @Override
     public void close() throws SQLException {
         if (this.connection != null && !this.connection.isClosed()) {

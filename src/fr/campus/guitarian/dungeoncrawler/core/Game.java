@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * The type Game.
+ */
 public class Game {
 
     private Character character;
@@ -36,6 +39,19 @@ public class Game {
     //private Dice twentySidedDice;
     private CombatManager combatManager;
 
+    /**
+     * Instantiates a new Game.
+     *
+     * @param menu           the menu
+     * @param playerPosition the player position
+     * @param boardSize      the board size
+     * @param characterDAO   the character dao
+     * @param sixSidedDice   the six sided dice
+     * @param combatManager  the combat manager
+     * @throws SQLException        the sql exception
+     * @throws IOException         the io exception
+     * @throws OutOfBoardException the out of board exception
+     */
     public Game(Menu menu, int playerPosition, int boardSize, CharacterDAO characterDAO, Dice sixSidedDice, CombatManager combatManager) throws SQLException, IOException, OutOfBoardException {
 
         this.menu = menu;
@@ -115,6 +131,9 @@ public class Game {
         }
     }
 
+    /**
+     * Start.
+     */
     public void start()
     {
         boolean isCharCreated = this.createCharacter() == 1;
@@ -152,6 +171,11 @@ public class Game {
     }
 
 
+    /**
+     * Play turn.
+     *
+     * @throws OutOfBoardException the out of board exception
+     */
     public void playTurn() throws OutOfBoardException{
 
         int diceValue = this.sixSidedDice.roll();
@@ -189,7 +213,11 @@ public class Game {
     }
 
 
-
+    /**
+     * Create character int.
+     *
+     * @return the int
+     */
     public int createCharacter(){
         int startChoice = menu.displayWelcomeMessage();
         if(startChoice == 1){
@@ -214,22 +242,47 @@ public class Game {
     // Méthodes BDD (getHeroesFromDB, createHeroInDB, editHeroInDB, changeHeroLifePointInDB)
     // moved to CharacterDAO. Use here this.characterDAO.xxx(...) if needed.
 
+    /**
+     * Gets character.
+     *
+     * @return the character
+     */
     public Character getCharacter() {
         return character;
     }
 
+    /**
+     * Sets character.
+     *
+     * @param character the character
+     */
     public void setCharacter(Character character) {
         this.character = character;
     }
 
+    /**
+     * Gets player position.
+     *
+     * @return the player position
+     */
     public int getPlayerPosition() {
         return playerPosition;
     }
 
+    /**
+     * Sets player position.
+     *
+     * @param playerPosition the player position
+     */
     public void setPlayerPosition(int playerPosition) {
         this.playerPosition = playerPosition;
     }
 
+    /**
+     * Gets board size.
+     *
+     * @return the board size
+     */
     public int getBoardSize() {
         return this.board.size();
     }

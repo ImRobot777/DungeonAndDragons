@@ -13,8 +13,19 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Random;
 
+/**
+ * The type Main.
+ */
 public class Main {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     * @throws SQLException        the sql exception
+     * @throws IOException         the io exception
+     * @throws OutOfBoardException the out of board exception
+     */
     public static void main(String[] args) throws SQLException, IOException, OutOfBoardException {
         Menu menu = Menu.getInstance();
         int playerPosition = 1;

@@ -5,17 +5,34 @@ import fr.campus.guitarian.dungeoncrawler.characters.enemies.Enemy;
 import fr.campus.guitarian.dungeoncrawler.core.Menu;
 import fr.campus.guitarian.dungeoncrawler.dice.Dice;
 
+/**
+ * The type Combat manager.
+ */
 public class CombatManager {
     private Dice sixSidedDice;
     private Dice twentySidedDice;
     private final Menu menu;
 
+    /**
+     * Instantiates a new Combat manager.
+     *
+     * @param sixSidedDice    the six sided dice
+     * @param twentySidedDice the twenty sided dice
+     * @param menu            the menu
+     */
     public CombatManager(Dice sixSidedDice, Dice twentySidedDice,  Menu menu) {
         this.sixSidedDice = sixSidedDice;
         this.twentySidedDice = twentySidedDice;
         this.menu = menu;
     }
 
+    /**
+     * Fight combat outcome.
+     *
+     * @param player the player
+     * @param enemy  the enemy
+     * @return the combat outcome
+     */
     public CombatOutcome fight(Character player, Enemy enemy) {
         //init
         CombatOutcome combatOutcome = new CombatOutcome(false, false, false, 0);
