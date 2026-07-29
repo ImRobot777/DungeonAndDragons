@@ -2,14 +2,10 @@ package fr.campus.guitarian.dungeoncrawler.board;
 
 import fr.campus.guitarian.dungeoncrawler.characters.Character;
 import fr.campus.guitarian.dungeoncrawler.characters.enemies.Enemy;
-import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
-import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
 import fr.campus.guitarian.dungeoncrawler.combat.CombatManager;
 import fr.campus.guitarian.dungeoncrawler.combat.CombatOutcome;
 import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
 import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
-import fr.campus.guitarian.dungeoncrawler.items.offensive.Spell;
-import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
 
 public class Cell {
 
@@ -56,12 +52,10 @@ public class Cell {
         }
         else if (this.offensiveEquipment!=null) {
             String eqpDesc = "'" + this.offensiveEquipment.getName() + "' with AP= " + this.offensiveEquipment.getAttackLevel() + " ";
-            Boolean playerIsWarriorAndEqpIsWeapon = player instanceof Warrior && this.offensiveEquipment instanceof Weapon;
-            Boolean playerIsWizardAndEqpIsSpell = player instanceof Wizard && this.offensiveEquipment instanceof Spell;
-            if(playerIsWarriorAndEqpIsWeapon ||  playerIsWizardAndEqpIsSpell){
+            if (player.canEquip(this.offensiveEquipment)) {
                 Boolean isLootBetterThanPlayersOne =
                         player.getOffensiveEquipment() == null || player.getOffensiveEquipment().getAttackLevel() < this.offensiveEquipment.getAttackLevel()
-                ;
+                        ;
                 if ( isLootBetterThanPlayersOne ){
                     player.setOffensiveEquipment(this.offensiveEquipment);
                     System.out.println("You got: " + eqpDesc + " your AP are now: " + (player.getAttackPoint()+this.offensiveEquipment.getAttackLevel()));

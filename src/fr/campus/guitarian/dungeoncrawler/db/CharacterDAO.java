@@ -1,18 +1,19 @@
 package fr.campus.guitarian.dungeoncrawler.db;
 
+import fr.campus.guitarian.dungeoncrawler.characters.Character;
+import fr.campus.guitarian.dungeoncrawler.characters.types.Warrior;
+import fr.campus.guitarian.dungeoncrawler.characters.types.Wizard;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
-import java.sql.*;
 
-public class CharacterDAO {
+public class CharacterDAO implements AutoCloseable {
+
     private Connection connection;
-
-    private CharacterRow characterRow;
 
     public CharacterDAO() throws SQLException, IOException {
         Properties dbProperties = new Properties();
@@ -25,89 +26,139 @@ public class CharacterDAO {
         this.connection = DriverManager.getConnection(url, user, password);
     }
 
-    public void testConnection() throws SQLException {
-        try{
+    public void testConnection() {
+        try {
             Statement stmt = this.connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM Characters");
             while (rs.next()) {
-                System.out.print(rs.getString("Name") + " / " + rs.getInt("LifePoints"));
+                System.out.println(rs.getString("Name") + " / " + rs.getInt("LifePoints"));
             }
         } catch (SQLException e) {
-            //throw new RuntimeException(e);
             System.out.println(e.getMessage());
-            throw new SQLException(e);
         }
     }
 
-    public List<CharacterRow> getCharactersDAO() throws SQLException {
+    // ---- Accès brut (implémentation interne, plus exposée à Game) ----
+
+    private List<CharacterRow> getCharactersDAO() throws SQLException {
         List<CharacterRow> characters = new ArrayList<>();
-        try{
-            Statement stmt = this.connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Characters");
-            while (rs.next()) {
-                String name = rs.getString("Name");
-                int id = rs.getInt("Id");
-                int hp = rs.getInt("LifePoints");
-                int ap = rs.getInt("Strength");
-                String typeLabel = rs.getString("Type").toLowerCase();
-                String offEquipLbl = rs.getString("OffensiveEquipment");
-                String defEquipLbl = rs.getString("DefensiveEquipment");
-                characters.add(new CharacterRow(id, typeLabel, name, hp, ap, offEquipLbl, defEquipLbl));
-            }
-            return  characters;
-        } catch (SQLException e) {
-            //throw new RuntimeException(e);
-            System.out.println(e.getMessage());
-            throw new SQLException(e);
+        Statement stmt = this.connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Characters");
+        while (rs.next()) {
+            characters.add(new CharacterRow(
+                    rs.getInt("Id"),
+                    rs.getString("Type").toLowerCase(),
+                    rs.getString("Name"),
+                    rs.getInt("LifePoints"),
+                    rs.getInt("Strength"),
+                    rs.getString("OffensiveEquipment"),
+                    rs.getString("DefensiveEquipment")
+            ));
         }
+        return characters;
     }
 
-    public int setCharactersDAO(CharacterRow characterRow) throws SQLException {
-        int newId;
+    private int setCharactersDAO(CharacterRow row) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO Characters (Type, Name, LifePoints, Strength, OffensiveEquipment, DefensiveEquipment) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS   // <-- indispensable pour pouvoir récupérer l'Id ensuite
+                "INSERT INTO Characters (Type, Name, LifePoints, Strength, OffensiveEquipment, DefensiveEquipment) VALUES (?, ?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
         );
-
-        stmt.setString(1, characterRow.getType());
-        stmt.setString(2, characterRow.getName());
-        stmt.setInt(3, characterRow.getLifePoints());
-        stmt.setInt(4, characterRow.getAttackPoints());
-        stmt.setString(5, characterRow.getOffensiveEquipment());
-        stmt.setString(6, characterRow.getDefensiveEquipment());
-
+        stmt.setString(1, row.getType());
+        stmt.setString(2, row.getName());
+        stmt.setInt(3, row.getLifePoints());
+        stmt.setInt(4, row.getAttackPoints());
+        stmt.setString(5, row.getOffensiveEquipment());
+        stmt.setString(6, row.getDefensiveEquipment());
         stmt.executeUpdate();
 
         ResultSet generatedKeys = stmt.getGeneratedKeys();
         generatedKeys.next();
-        newId = generatedKeys.getInt(1);
-
-        return newId;
+        return generatedKeys.getInt(1);
     }
 
-    public void editCharactersDAO(CharacterRow characterRow) throws SQLException {
+    private void editCharactersDAO(CharacterRow row) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(
-                "UPDATE Characters SET Name=?, LifePoints=?, Strength=?, OffensiveEquipment=?, DefensiveEquipment=? WHERE Id=?");
-
-        stmt.setString(1, characterRow.getName());
-        stmt.setInt(2, characterRow.getLifePoints());
-        stmt.setInt(3, characterRow.getAttackPoints());
-        stmt.setString(4, characterRow.getOffensiveEquipment());
-        stmt.setString(5, characterRow.getDefensiveEquipment());
-        stmt.setInt(6, characterRow.getId());
-
+                "UPDATE Characters SET Name=?, LifePoints=?, Strength=?, OffensiveEquipment=?, DefensiveEquipment=? WHERE Id=?"
+        );
+        stmt.setString(1, row.getName());
+        stmt.setInt(2, row.getLifePoints());
+        stmt.setInt(3, row.getAttackPoints());
+        stmt.setString(4, row.getOffensiveEquipment());
+        stmt.setString(5, row.getDefensiveEquipment());
+        stmt.setInt(6, row.getId());
         stmt.executeUpdate();
     }
 
-    public void editLifePointsDAO(int hp, int id) throws SQLException {
+    private void editLifePointsDAO(int hp, int id) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(
-                "UPDATE Characters SET LifePoints=? WHERE Id=?");
-
+                "UPDATE Characters SET LifePoints=? WHERE Id=?"
+        );
         stmt.setInt(1, hp);
         stmt.setInt(2, id);
-
         stmt.executeUpdate();
     }
 
+    // ---- API publique orientée domaine (utilisée par Game) ----
+    // Rapatriée depuis Game : le mapping CharacterRow <-> Character vit ici désormais.
+
+    public List<Character> getHeroesFromDB() throws SQLException {
+        List<Character> heroes = new ArrayList<>();
+        for (CharacterRow row : this.getCharactersDAO()) {
+            Character character;
+            if (row.getType().equals("warrior")) {
+                character = new Warrior(row.getName());
+            } else if (row.getType().equals("wizard")) {
+                character = new Wizard(row.getName());
+            } else {
+                throw new SQLDataException("Data Base Characters Type ERROR");
+            }
+            character.setId(row.getId());
+            character.setHealthPoint(row.getLifePoints());
+            character.setAttackPoint(row.getAttackPoints());
+            heroes.add(character);
+        }
+        return heroes;
+    }
+
+    public void createHeroInDB(Character c) throws SQLException {
+        CharacterRow row = toRow(c, 0);
+        c.setId(this.setCharactersDAO(row));
+    }
+
+    public void editHeroInDB(Character c) throws SQLException {
+        this.editCharactersDAO(toRow(c, c.getId()));
+    }
+
+    public void changeHeroLifePointInDB(Character c) throws SQLException {
+        this.editLifePointsDAO(c.getHealthPoint(), c.getId());
+    }
+
+    private CharacterRow toRow(Character c, int id) throws SQLException {
+        String type;
+        if (c instanceof Warrior) {
+            type = "Warrior";
+        } else if (c instanceof Wizard) {
+            type = "Wizard";
+        } else {
+            throw new SQLDataException("Character's Type ERROR");
+        }
+        return new CharacterRow(
+                id,
+                type,
+                c.getName(),
+                c.getHealthPoint(),
+                c.getAttackPoint(),
+                c.getOffensiveEquipment() != null ? c.getOffensiveEquipment().toString() : null,
+                c.getDefensiveEquipment() != null ? c.getDefensiveEquipment().toString() : null
+        );
+    }
+
+    // ---- Fermeture propre de la ressource ----
+
+    @Override
+    public void close() throws SQLException {
+        if (this.connection != null && !this.connection.isClosed()) {
+            this.connection.close();
+        }
+    }
 }
