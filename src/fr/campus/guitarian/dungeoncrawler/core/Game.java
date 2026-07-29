@@ -23,15 +23,21 @@ import java.util.*;
 public class Game {
 
     private Character character;
-    private final Menu menu = Menu.getInstance();
+    private final Menu menu;
 
     private int playerPosition;
+    private int boardSize;
     private List<Cell> board;
 
-    private CharacterDAO characterDAO = new CharacterDAO() ;
+    private CharacterDAO characterDAO;
+    public Game(Menu menu, int playerPosition, int boardSize, CharacterDAO characterDAO) throws SQLException, IOException {
 
-    public Game() throws SQLException, IOException {
-        this.playerPosition = 1;
+        this.menu = menu;
+        this.playerPosition = playerPosition;
+        this.boardSize = boardSize;
+        this.characterDAO = characterDAO;
+
+
         this.initializeBoard();
     }
 
@@ -39,12 +45,12 @@ public class Game {
         this.board = new ArrayList<Cell>();
 
         //Add First 64 empty cells
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < this.boardSize; i++) {
             this.board.add(new Cell());
         }
 
         List<Integer> randomPositions = new ArrayList<>();
-        for(int i = 0; i < 64; i++){
+        for(int i = 0; i < this.boardSize; i++){
             randomPositions.add(i);
         }
         Collections.shuffle(randomPositions);
