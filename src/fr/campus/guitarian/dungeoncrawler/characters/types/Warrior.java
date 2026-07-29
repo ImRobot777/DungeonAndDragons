@@ -1,7 +1,8 @@
 package fr.campus.guitarian.dungeoncrawler.characters.types;
 
 import fr.campus.guitarian.dungeoncrawler.characters.Character;
-import fr.campus.guitarian.dungeoncrawler.items.DefensiveEquipment;
+import fr.campus.guitarian.dungeoncrawler.items.OffensiveEquipment;
+import fr.campus.guitarian.dungeoncrawler.items.offensive.Weapon;
 
 public class Warrior extends Character {
 
@@ -9,19 +10,9 @@ public class Warrior extends Character {
         super(name, 10, 5, null, null, 10);
     }
 
-
-
-    /*
     @Override
-    public String toString() {
-        return "Warrior{" +
-                "name='" + this.getName() + '\'' +
-                ", healthPoints=" + this.getHealthPoint() +
-                ", attackLevel=" + this.getAttackPoint() +
-                ", offensiveEquipment=" + getOffensiveEquipment() +
-                ", defensiveEquipment=" + getDefensiveEquipment() +
-                '}';
+    public boolean canEquip(OffensiveEquipment equipment) {
+        return equipment instanceof Weapon;
     }
-    */
 
 }

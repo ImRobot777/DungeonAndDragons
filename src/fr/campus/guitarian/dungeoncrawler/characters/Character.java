@@ -74,6 +74,12 @@ public abstract class Character {
         this.defensiveEquipment = defensiveEquipment;
     }
 
+    // Default behavior: an Enemy can not equip
+    // Warrior/Wizard override this method ==> (polymorphisme).
+    public boolean canEquip(OffensiveEquipment equipment) {
+        return false;
+    }
+
     @Override
     public String toString() {
 
